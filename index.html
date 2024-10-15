@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Калькулятор ИМТ</title>
+  <style>
+    body {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 50px;
+    }
+
+    .container {
+      max-width: 576px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .input-div label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .input-div input {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 2rem;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    .input-div button {
+      font-size: 2rem;
+      width: 75%;
+      display: block;
+      margin: 0 auto;
+      background-color: darkblue;
+      color: white;
+      padding: 10px;
+      border-radius: 50px;
+    }
+
+    .input-div {
+      margin-bottom: 20px;
+    }
+  </style>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d4c1fe">
+  <link rel="icon" href="images/icons/icon-128x128.png">
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="images/logo.png" alt="logo" height="50px" width="50px">
+      Калькулятор ИМТ
+    </div>
+    <div class="input-div">
+      <label for="height">Ваш рост в сантиметрах</label>
+      <input type="number" id="height">
+    </div>
+    <div class="input-div">
+      <label for="weight">Ваш вес в килограммах</label>
+      <input type="number" id="weight">
+    </div>
+    <div class="input-div">
+      <label for="output">Ваш ИМТ</label>
+      <input type="number" id="output" readonly>
+    </div>
+    <div class="input-div">
+      <button id="btn">Посчитать ИМТ</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const height_elem = document.getElementById('height');
+      const weight_elem = document.getElementById('weight');
+      const output_elem = document.getElementById('output');
+      const btn_elem = document.getElementById('btn');
+
+      btn_elem.addEventListener('click', function () {
+        let h = (+height_elem.value) / 100;
+        let w = +weight_elem.value;
+
+        if (h && w) {
+          let imt = w / (h * h);
+          output_elem.value = imt.toFixed(2);
+        } else {
+          output_elem.value = 'Введите данные';
+        }
+      });
+
+      // Регистрация Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => {
+            console.log('Service Worker зарегистрирован', registration);
+          })
+          .catch(error => {
+            console.log('Service Worker регистрация не удалась', error);
+          });
+      }
+
+      // Логика установки PWA
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+
+        
+        console.log('PWA можно установить');
+
+        
+
+        // Обработчик события для установки приложения
+        window.addEventListener('appinstalled', () => {
+          console.log('PWA установлено');
+          deferredPrompt = null;
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
